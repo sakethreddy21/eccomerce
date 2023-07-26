@@ -71,6 +71,7 @@ section{
   margin-top: 23px;
   display: flex;
   margin-bottom: 10px;
+  align-items: center;
 }
 
 .sign_form .signin_info p{
