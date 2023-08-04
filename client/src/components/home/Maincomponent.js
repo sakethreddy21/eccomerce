@@ -8,7 +8,7 @@ import { useDispatch, useSelector} from 'react-redux'
 
 const Maincomponent = () => {
   const {products}= useSelector(state=> state.getproductsdata);
-  console.log(products)
+ 
   const dispatch = useDispatch();
 
   useEffect(()=>{

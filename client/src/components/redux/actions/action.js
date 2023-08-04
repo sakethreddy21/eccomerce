@@ -3,8 +3,8 @@ export const getProducts = ()=> async(dispatch)=>{
       const data = await fetch("/getproducts",{
               method:"GET",
               headers:{
-                  "Content-Type":"application/json"
-              }
+                "Content-Type":"application/json"
+            }
       });
 
       const res = await data.json();
