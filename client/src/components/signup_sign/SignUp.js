@@ -1,6 +1,8 @@
 import React, {useState} from 'react'
 import { Divider } from '@mui/material';
 import img from './blacklogoamazon.png'
+import { ToastContainer, toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { NavLink } from 'react-router-dom';
 const Signup = () => {
 
@@ -25,6 +27,43 @@ const Signup = () => {
           }
       })
   };
+
+  const senddata = async(e)=>{
+    e.preventDefault();
+    const {fname,email,mobile,password,cpassword}=udata;
+    if(fname===""){
+        toast.warning("fname provide", {
+            position:"top-center"
+        })
+    }else if(email===""){
+        toast.warning("email provide", {
+            position:"top-center"
+        })
+    }
+    const res= await fetch("register",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+            fname,email,mobile,password,cpassword 
+        })
+    })
+    const data = await res.json();
+    //console.log(data);
+    if(res.status===422 || !data){
+        toast.warning("invalid details",{
+            position:"top-center",
+           })
+       // alert("No Data")
+       
+    }else{
+        toast.success("data succesfully added",{
+            position:"top-center",
+           })
+        //alert("data succesfully added")
+    }
+  }
 
  
 
@@ -72,7 +111,7 @@ const Signup = () => {
                               value={udata.cpassword}
                               id="passwordg" />
                       </div>
-                      <button type="submit" className="signin_btn" >Continue</button>
+                      <button type="submit" className="signin_btn" onClick={senddata}>Continue</button>
 
                       <Divider />
 
@@ -82,7 +121,7 @@ const Signup = () => {
                       </div>
                   </form>
               </div>
-              
+              <ToastContainer/>
           </div>
       </section>
   )
