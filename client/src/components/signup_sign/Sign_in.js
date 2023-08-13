@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import './signup.css'
 import img from './blacklogoamazon.png'
+import { ToastContainer, toast} from 'react-toastify';
 import { NavLink } from 'react-router-dom'
 const Sign_in = () => {
 
@@ -24,6 +25,34 @@ const Sign_in = () => {
           }
       })
   };
+
+  const senddata=async(e)=>{
+    e.preventDefault()
+    const {email, password}= logdata;
+    const res= await fetch("login",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+           email, password 
+        })
+    })
+    const data =await res.json();
+    console.log(data)
+    if(res.status===400 || !data){
+        console.log("invlaid details");
+        toast.warn("inavlid details", {
+            position:"top-center"
+        })
+    }else{
+        console.log("data valid")
+        toast.success("user valid", {
+            position:"top-center"
+        })
+        setData({...logdata,email:"", password:""});
+    }
+  }
 
   
 
@@ -51,7 +80,7 @@ const Sign_in = () => {
                               value={logdata.password}
                               id="password" placeholder="At least 6 characters" />
                       </div>
-                      <button type="submit" className="signin_btn" >Continue</button>
+                      <button type="submit" className="signin_btn" onClick={senddata}>Continue</button>
                   </form>
                  
               </div>
@@ -60,7 +89,7 @@ const Sign_in = () => {
                   <button>  <NavLink to="/register">Create your Amazon Account</NavLink></button>
               </div>
           </div>
-
+<ToastContainer/>
       </section>
   )
 }
