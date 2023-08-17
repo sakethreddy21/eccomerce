@@ -85,14 +85,18 @@ router.post("/login", async (req, res) => {
   try {
 
       const userlogin = await User.findOne({ email: email });
-      console.log(userlogin);
+      console.log(userlogin + "user value");
       if (userlogin) {
           const isMatch = await bcrypt.compare(password, userlogin.password);
           console.log(isMatch);
 
         // token generate
-          const token =await userlogin.generateAuthtokenn()
-          console.log(token) 
+          const token =await userlogin.generateAuthtoken()
+          //console.log(token) 
+          res.cookie("Amazonweb",token,{
+            expires:new Date(Date.now()+ 900000),
+            httpOnly:true
+          })
 
           if (!isMatch) {
               res.status(400).json({ error: "invalid crediential pass" });
@@ -100,7 +104,9 @@ router.post("/login", async (req, res) => {
               res.status(201).json({error:"password match"});
           }
 
-      } 
+      } else{
+        res.status(400).json({error:"invalid details"})
+      }
 
   } catch (error) {
       res.status(400).json({ error: "invalid crediential pass" });
