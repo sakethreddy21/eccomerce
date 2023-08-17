@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
-
+const jwt = require("jsonwebtoken")
+const secretKey = process.env.KEY
 const userSchema = new mongoose.Schema({
     fname: {
         type: String,
@@ -53,12 +54,20 @@ userSchema.pre("save", async function(next){
   
 })
 
+//token generate
+userSchema.methods.generateAuthtoken= async function(){
+    try {
+        let token_one = jwt.sign({_id:this._id,secretKey});
+        this.tokens= this.tokens.concat({token:token_one})
+        await this.save();
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
 
 const User = new mongoose.model("USER", userSchema);
-
-
-
-
 module.exports = User;
 
 

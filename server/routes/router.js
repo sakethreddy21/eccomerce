@@ -90,7 +90,9 @@ router.post("/login", async (req, res) => {
           const isMatch = await bcrypt.compare(password, userlogin.password);
           console.log(isMatch);
 
-
+        // token generate
+          const token =await userlogin.generateAuthtokenn()
+          console.log(token) 
 
           if (!isMatch) {
               res.status(400).json({ error: "invalid crediential pass" });
