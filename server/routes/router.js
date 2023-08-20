@@ -3,7 +3,7 @@ const router = new express.Router()
 const Products = require('../models/productSchema');
 const User = require('../models/userSchema');
 const bcrypt = require("bcryptjs");
-
+const authenicate= require("../middleware/authenticate")
 
 
 
@@ -114,6 +114,93 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// adding the data to cart
+
+router.post("/addcart/:id", authenicate, async (req, res) => {
+
+  try {
+      console.log("perfect 6");
+      const { id } = req.params;
+      const cart = await Products.findOne({ id: id });
+      console.log(cart + "cart value");
+
+      const Usercontact = await User.findOne({ _id: req.userID });
+      console.log(Usercontact + "user milta hain");
+
+
+      if (Usercontact) {
+          const cartData = await Usercontact.addcartdata(cart);
+
+          await Usercontact.save();
+          console.log(cartData + " thse save wait kr");
+          console.log(Usercontact + "userjode save");
+          res.status(201).json(Usercontact);
+      }else{
+        res.status(401).json({error:"inavalid user"})
+      }
+  } catch (error) {
+      console.log(error);
+  }
+});
+
+// get data into the cart
+router.get("/cartdetails", authenicate, async (req, res) => {
+  try {
+      const buyuser = await User.findOne({ _id: req.userID });
+      console.log(buyuser + "user hain buy pr");
+      res.status(201).json(buyuser);
+  } catch (error) {
+      console.log(error + "error for buy now");
+  }
+});
+
+// get user is login or not
+router.get("/validuser", authenicate, async (req, res) => {
+  try {
+      const validuserone = await User.findOne({ _id: req.userID });
+      console.log(validuserone + "user hain home k header main pr");
+      res.status(201).json(validuserone);
+  } catch (error) {
+      console.log(error + "error for valid user");
+  }
+});
+
+//remove data from cart 
+router.get("/remove/:id", authenicate, async (req, res) => {
+  try {
+      const { id } = req.params;
+
+      req.rootUser.carts = req.rootUser.carts.filter((curel) => {
+          return curel.id != id
+      });
+
+      req.rootUser.save();
+      res.status(201).json(req.rootUser);
+      console.log("iteam remove");
+
+  } catch (error) {
+      console.log(error + "jwt provide then remove");
+      res.status(400).json(error);
+  }
+});
+
+
+//logout 
+router.get("/logout", authenicate, async (req, res) => {
+  try {
+      req.rootUser.tokens = req.rootUser.tokens.filter((curelem) => {
+          return curelem.token !== req.token
+      });
+
+      res.clearCookie("eccomerce", { path: "/" });
+      req.rootUser.save();
+      res.status(201).json(req.rootUser.tokens);
+      console.log("user logout");
+
+  } catch (error) {
+      console.log(error + "jwt provide then logout");
+  }
+});
 
 
 

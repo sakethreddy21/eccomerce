@@ -1,8 +1,9 @@
-import React, {useState} from 'react'
+import React, {useState, useContext} from 'react'
 import './signup.css'
 import img from './blacklogoamazon.png'
 import { ToastContainer, toast} from 'react-toastify';
 import { NavLink } from 'react-router-dom'
+import { Logincontext } from '../context/Contextprovider';
 const Sign_in = () => {
 
 
@@ -11,8 +12,10 @@ const Sign_in = () => {
       email: "",
       password: ""
   });
+  
 
    console.log(logdata);
+   const { account, setAccount}= useContext(Logincontext)
 
   const adddata = (e) => {
       const { name, value } = e.target;
@@ -29,6 +32,7 @@ const Sign_in = () => {
   const senddata=async(e)=>{
     e.preventDefault()
     const {email, password}= logdata;
+    try{
     const res= await fetch("login",{
         method:"POST",
         headers:{
@@ -46,13 +50,18 @@ const Sign_in = () => {
             position:"top-center"
         })
     }else{
-        console.log("data valid")
-        toast.success("user valid", {
-            position:"top-center"
-        })
-        setData({...logdata,email:"", password:""});
+        setAccount(data);
+        setData({ ...logdata, email: "", password: "" })
+        toast.success("Login Successfully done 😃!", {
+            position: "top-center"
+        });
     }
+    
   }
+  catch (error) {
+    console.log("login page ka error" + error.message);
+}
+}
 
   
 

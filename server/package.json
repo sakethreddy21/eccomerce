@@ -19,5 +19,8 @@
     "mongoose": "^7.4.1",
     "server": "^1.0.38",
     "validator": "^13.9.0"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.2"
   }
 }

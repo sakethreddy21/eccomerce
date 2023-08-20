@@ -8,9 +8,23 @@ import Sign_in from './components/signup_sign/Sign_in'
 import Cart from './components/cart/Cart';
 import { Routes, Route } from 'react-router-dom';
 import Buynow from './components/buynow/Buynow';
+import { useEffect, useState } from 'react';
+import CircularProgress from '@mui/material/CircularProgress';
+
+
 function App() {
+  const [data, setData] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setData(true);
+    }, 2000);
+  }, [])
+
   return (
-    < >
+    <>
+    { data?(
+      <>
      <Navbar/>
      <Newnav/>
      <Routes>
@@ -22,8 +36,14 @@ function App() {
      </Routes>
      <Footer/>
      
-    </>
-  );
-}
+    </>):(
+    <div className="circle">
+            <CircularProgress />
+            <h2> Loading....</h2>
+          </div>
+      )};
+      </>
+)}
+
 
 export default App;
